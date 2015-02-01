@@ -1,7 +1,5 @@
 // dependencies
-var express = require('express')
-  , stylus = require('stylus')
-  , nib = require('nib');
+var express = require('express');
 var logger = require('morgan');
 var twitter = require('twitter');
 var soundcloud = require('soundcloud-resolver');
@@ -24,22 +22,9 @@ var route_index = require('./routes/index');
 var route_randomtracks = require('./routes/randomtracks');
 
 var app = express();
-function compile(str, path) {
-  return stylus(str)
-    .set('filename', path)
-    .use(nib())
-}
-
-// use jade for view engine
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use(stylus.middleware(
-  { src: __dirname + '/public'
-  , compile: compile
-  }
-));
 
 // serve static files from public
 app.use(express.static(__dirname + '/public'));

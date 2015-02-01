@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<title>Flyover AM</title>
+		<meta name="description" content="FlyoverAM">
+
+		<link rel="stylesheet" href="css/styles.css?v=1.0">
+
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.8/buzz.min.js'></script>
+		<script src='https://code.jquery.com/jquery-2.1.3.min.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js'></script>
+		<script src='http://connect.soundcloud.com/sdk.js'></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/gsap/1.15.1/TweenMax.min.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mb.YTPlayer/2.8.0/jquery.mb.YTPlayer.min.js'></script>
+
+		<script src='/js/api.js'></script>
+		<script src='/js/soundcloud.js'></script>
+		<script src='/js/youtube.js'></script>
+		<script src='/js/radio.js'></script>
+		<script src='/js/main.js'></script>
+
+		<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="content">
+			<div id="bgndVideo" class="player" 
+			     data-property="{videoURL:'http://youtu.be/nHcy3r084SU',containment:'body',autoPlay:true, mute:true, startAt:0, opacity:1}">
+			</div>
+		</div>
+	</body>
+</html>
