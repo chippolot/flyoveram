@@ -5,6 +5,10 @@ var express = require('express')
 var logger = require('morgan');
 var twitter = require('twitter');
 
+// routes
+var route_index = require('./routes/index');
+var route_randomtrack = require('./routes/randomtrack');
+
 // authenticate twitter
 var client = new twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -34,11 +38,9 @@ app.use(stylus.middleware(
 // serve static files from public
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) {
-  res.render('index',
-  { title : 'Home' }
-  )
-});
+// setup routes
+app.use('/', route_index);
+app.use('/randomtrack', route_randomtrack);
 
 // listen on port 3000
 app.listen(process.env.PORT || 3000)
