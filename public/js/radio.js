@@ -66,6 +66,7 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 			var track = this.tracklist.shift();
 
 			// Stream the song
+			console.log(":: starting to stream song", track.id)
 			soundcloudStream(track.id, {}, $.proxy(function(sound) {
 
 				this.playingSound = sound;
@@ -77,9 +78,13 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 				this.fadeInMusic();
 
-				TweenMax.delayedCall(randomInRange(MIN_MUSIC_PLAY_DURATION, MAX_MUSIC_PLAY_DURATION), function() {
+				var playDuration = randomInRange(MIN_MUSIC_PLAY_DURATION, MAX_MUSIC_PLAY_DURATION);
+				console.log(":: stopping song in ", playDuration)
+				TweenMax.delayedCall(playDuration, function() {
 					this.fadeOutMusic();
 
+					var cooldownDuration = randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN);
+					console.log(":: starting song in ", cooldownDuration)
 					TweenMax.delayedCall(randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN), function() {
 
 						this.playNextTrack();

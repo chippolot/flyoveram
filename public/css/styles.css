@@ -1,0 +1,27 @@
+html {
+	color: #222222;
+    font-family: 'Courgette', cursive;
+
+	cursor: default;
+
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+}
+
+.footer {
+    width:100%;
+    bottom:0px;
+    left:0px;
+    position:absolute;
+}
+
+.footer-content {
+	float: right;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
