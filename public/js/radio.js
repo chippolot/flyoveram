@@ -29,6 +29,8 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 		initialize:function() {
 			this.tracklist = [];
 			this.playingSound = null;
+			this.activeWaitTween = null;
+			this.activeFadeTween = null;
 
 			this.staticFadePercent = 0;
 
@@ -56,7 +58,10 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 			// If we're out of tracks, grab a new set
 			if (this.tracklist.length == 0) {
+				console.log(":: start getting new tracks")
+				
 				this.getRandomTracks($.proxy(function(){
+					console.log(":: shuffling new tracks")
 					this.playNextTrack();
 				}, this));
 				return;
@@ -79,12 +84,12 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 				var playDuration = randomInRange(MIN_MUSIC_PLAY_DURATION, MAX_MUSIC_PLAY_DURATION);
 				console.log(":: stopping song in ", playDuration)
-				TweenMax.delayedCall(playDuration, function() {
+				this.activeWaitTween = TweenMax.delayedCall(playDuration, function() {
 					this.fadeOutMusic();
 
 					var cooldownDuration = randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN);
 					console.log(":: starting song in ", cooldownDuration)
-					TweenMax.delayedCall(randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN), function() {
+					this.activeWaitTween = TweenMax.delayedCall(randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN), function() {
 
 						this.playNextTrack();
 					}, null, this);
@@ -93,13 +98,15 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 		},
 
 		fadeOutMusic:function() {
-			TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:1, onUpdate:$.proxy(function(){
+			console.log(":: fading song in ")
+			this.activeFadeTween = TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:1, onUpdate:$.proxy(function(){
 				this.updateSoundVolumes(this.staticFadePercent);
 			}, this) });
 		},
 
 		fadeInMusic:function() {
-			TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:0, onUpdate:$.proxy(function(){
+			console.log(":: fading song out ")
+			this.activeFadeTween = TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:0, onUpdate:$.proxy(function(){
 				this.updateSoundVolumes(this.staticFadePercent);
 			}, this) });
 		},

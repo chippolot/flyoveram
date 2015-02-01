@@ -5,7 +5,7 @@ var URI = require('URIjs');
 var urlExpander = require('expand-url');
 var secretTracksJSON = require('../config/secretTracks.json')
 
-var CHANCE_FOR_SECRET_TRACKS = 1.0;
+var CHANCE_FOR_SECRET_TRACKS = 0.35;
 
 var router = express.Router();
 
