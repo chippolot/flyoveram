@@ -44,14 +44,22 @@ function expandUrls(urls, callback)
 	});
 }
 
-function filterValidSoundCloudTrackUrls(soundcloud, urls, callback)
+function getValidTrackIds(soundcloud, urls, callback)
 {
-	async.filter(urls, function(url, callback) {
+	var trackIds = [];
+
+	async.each(urls, function(url, callback) {
 		soundcloud.resolve(url, function(err, tracks) {
-			callback(err == null);
+			if (!err)
+			{
+				_.each(tracks, function(track) {
+					trackIds.push(track.id);
+				});
+			}
+			callback(null);
 		});
-	}, function(results) {
-		callback(results);
+	}, function(err) {
+		callback(trackIds);
 	});
 }
 
@@ -67,8 +75,8 @@ router.get('/', function(req, res, next) {
 	// search for twitter posts with urls in them
 	twitterSearchUrls(twitter, 'site:soundcloud.com', count, function(urls) {
 		expandUrls(urls, function(longUrls){
-			filterValidSoundCloudTrackUrls(soundcloud, longUrls, function(validUrls){
-				res.json({'trackUrls': validUrls});
+			getValidTrackIds(soundcloud, longUrls, function(trackIds){
+				res.json({'trackIds': trackIds});
 			});
 		});
 	});
