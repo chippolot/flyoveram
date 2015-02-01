@@ -1,9 +1,17 @@
-/* dependencies */
+// dependencies
 var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib');
-
 var logger = require('morgan');
+var twitter = require('twitter');
+
+// authenticate twitter
+var client = new twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+});
 
 var app = express();
 function compile(str, path) {
@@ -12,7 +20,7 @@ function compile(str, path) {
     .use(nib())
 }
 
-/* Tell express view engine to use jade */
+// use jade for view engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
@@ -23,7 +31,7 @@ app.use(stylus.middleware(
   }
 ));
 
-/* Tell express to serve static files from the public folder. */
+// serve static files from public
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
@@ -32,5 +40,5 @@ app.get('/', function (req, res) {
   )
 });
 
-/* Listen on port 3000 */
+// listen on port 3000
 app.listen(process.env.PORT || 3000)

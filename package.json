@@ -11,6 +11,10 @@
     "jade": "~1.9.1",
     "morgan": "~1.5.1",
     "nib": "*",
-    "stylus": "*"
+    "ntwitter": "^0.5.0",
+    "passport": "^0.2.1",
+    "passport-twitter": "^1.0.2",
+    "stylus": "*",
+    "twitter": "^1.2.1"
   }
 }
