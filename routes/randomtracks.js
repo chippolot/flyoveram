@@ -2,7 +2,10 @@ var express = require('express');
 var _ = require('underscore-node');
 var async = require('async');
 var URI = require('URIjs');
-var urlExpander=require('expand-url');
+var urlExpander = require('expand-url');
+var secretTracksJSON = require('../config/secretTracks.json')
+
+var CHANCE_FOR_SECRET_TRACKS = 1.0;
 
 var router = express.Router();
 
@@ -50,13 +53,19 @@ function getValidTracks(soundcloud, urls, callback)
 
 	async.each(urls, function(url, callback) {
 		soundcloud.resolve(url, function(err, tracks) {
+
+			// don't add track if there was error resolving url
 			if (!err)
 			{
 				_.each(tracks, function(track) {
-					resultTracks.push( { 
-						id: track.id,
-						duration: track.duration
-					});
+
+					// only add streamable tracks
+					if (track.streamable) {
+						resultTracks.push( { 
+							id: track.id,
+							duration: track.duration
+						});
+					}
 				});
 			}
 			callback(null);
@@ -79,6 +88,13 @@ router.get('/', function(req, res, next) {
 	twitterSearchUrls(twitter, 'site:soundcloud.com', count, function(urls) {
 		expandUrls(urls, function(longUrls){
 			getValidTracks(soundcloud, longUrls, function(tracks){
+
+				// maybe add some secret tracks?
+				if (Math.random() <= CHANCE_FOR_SECRET_TRACKS)
+				{
+					tracks.push(_.sample(secretTracksJSON));
+				}
+
 				res.json({'tracks': tracks});
 			});
 		});
