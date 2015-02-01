@@ -44,14 +44,32 @@ function expandUrls(urls, callback)
 	});
 }
 
+function filterValidSoundCloudTrackUrls(soundcloud, urls, callback)
+{
+	async.filter(urls, function(url, callback) {
+		soundcloud.resolve(url, function(err, tracks) {
+			callback(err == null);
+		});
+	}, function(results) {
+		callback(results);
+	});
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-	// search for twitter posts with urls in them
 	var twitter = req.session.twitter;
-	twitterSearchUrls(twitter, 'site:soundcloud.com', 25, function(urls) {
+	var soundcloud = req.session.soundcloud;
+
+	var count = req.query.count || 25
+	count = Math.min(25, count)
+
+	// search for twitter posts with urls in them
+	twitterSearchUrls(twitter, 'site:soundcloud.com', count, function(urls) {
 		expandUrls(urls, function(longUrls){
-			console.log(longUrls);
+			filterValidSoundCloudTrackUrls(soundcloud, longUrls, function(validUrls){
+				res.json({'trackUrls': validUrls});
+			});
 		});
 	});
 });
