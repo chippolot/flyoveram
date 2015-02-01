@@ -6,7 +6,7 @@ function randomInRange(min, max) {
 	return min + (max - min) * Math.random();
 }
 
-var STATIC_FADE_DURATION = 0.75;
+var STATIC_FADE_DURATION = 0.9;
 
 var STATIC_MIN_VOLUME = 30;
 var STATIC_MAX_VOLUME = 80;
@@ -15,11 +15,10 @@ var MUSIC_MIN_VOLUME = 0;
 var MUSIC_MAX_VOLUME = 30;
 
 var MIN_MUSIC_PLAY_DURATION = 9;
-var MAX_MUSIC_PLAY_DURATION = 24;
+var MAX_MUSIC_PLAY_DURATION = 18;
 
 var MIN_MUSIC_PLAY_COOLDOWN = 5;
 var MAX_MUSIC_PLAY_COOLDOWN = 9;
-
 
 (function(){
 	
@@ -29,8 +28,6 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 		initialize:function() {
 			this.tracklist = [];
 			this.playingSound = null;
-			this.activeWaitTween = null;
-			this.activeFadeTween = null;
 
 			this.staticFadePercent = 0;
 
@@ -59,7 +56,7 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 			// If we're out of tracks, grab a new set
 			if (this.tracklist.length == 0) {
 				console.log(":: start getting new tracks")
-				
+
 				this.getRandomTracks($.proxy(function(){
 					console.log(":: shuffling new tracks")
 					this.playNextTrack();
@@ -78,35 +75,45 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 				var randomPercent = Math.random();
 				var position = randomPercent * track.duration;
+				this.playingSound.setVolume(0);
 				this.playingSound.play({position:position});
+				this.playingSound.onPosition(position, $.proxy(function(){
 
-				this.fadeInMusic();
+					this.fadeInMusic();
 
-				var playDuration = randomInRange(MIN_MUSIC_PLAY_DURATION, MAX_MUSIC_PLAY_DURATION);
-				console.log(":: stopping song in ", playDuration)
-				this.activeWaitTween = TweenMax.delayedCall(playDuration, function() {
-					this.fadeOutMusic();
+					var playDuration = randomInRange(MIN_MUSIC_PLAY_DURATION, MAX_MUSIC_PLAY_DURATION);
+					console.log(":: stopping song in ", playDuration)
 
-					var cooldownDuration = randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN);
-					console.log(":: starting song in ", cooldownDuration)
-					this.activeWaitTween = TweenMax.delayedCall(randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN), function() {
+					TweenMax.delayedCall(playDuration, function() {
+						this.fadeOutMusic();
 
-						this.playNextTrack();
-					}, null, this);
-				}, null, this);
-			}, this));
+						var cooldownDuration = randomInRange(MIN_MUSIC_PLAY_COOLDOWN, MAX_MUSIC_PLAY_COOLDOWN);
+						console.log(":: starting song in ", cooldownDuration)
+						TweenMax.delayedCall(cooldownDuration, function() {
+
+							this.playNextTrack();
+
+						}, null, this); // fade out
+
+					}, null, this);	// fade in
+
+				}, this)); // onPosition
+
+			}, this));	// soundcloudStream
 		},
 
 		fadeOutMusic:function() {
-			console.log(":: fading song in ")
-			this.activeFadeTween = TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:1, onUpdate:$.proxy(function(){
+			console.log(":: fading song out")
+
+			TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:1, onUpdate:$.proxy(function(){
 				this.updateSoundVolumes(this.staticFadePercent);
 			}, this) });
 		},
 
 		fadeInMusic:function() {
-			console.log(":: fading song out ")
-			this.activeFadeTween = TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:0, onUpdate:$.proxy(function(){
+			console.log(":: fading song in")
+
+			TweenMax.to(this, STATIC_FADE_DURATION, { staticFadePercent:0, onUpdate:$.proxy(function(){
 				this.updateSoundVolumes(this.staticFadePercent);
 			}, this) });
 		},
