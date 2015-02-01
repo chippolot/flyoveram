@@ -7,7 +7,7 @@ if (document.location.hostname == "localhost")
 function invokeAPIMethod(methodName, callback)
 {
 	$.ajax({
-	  url: API_DOMAIN + "randomtracks",
+	  url: API_DOMAIN + methodName,
 	  type: "GET",
 	  dataType: "json"
 	}).done(callback);

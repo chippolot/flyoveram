@@ -20,6 +20,7 @@ var soundcloudClient = new soundcloud(
 // routes
 var route_index = require('./routes/index');
 var route_randomtracks = require('./routes/randomtracks');
+var route_randomvideo = require('./routes/randomvideo');
 var route_test = require('./routes/test');
 
 var app = express();
@@ -41,6 +42,7 @@ app.use(function(req, res, next) {
 // setup routes
 app.use('/', route_index);
 app.use('/randomtracks', route_randomtracks);
+app.use('/randomvideo', route_randomvideo);
 app.use('/test', route_test);
 
 // listen on port 3000
