@@ -71,7 +71,7 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 			//TODO: Get this working better
 			var randomPercent = Math.random();
 			var position = randomPercent * track.duration;
-			soundcloudStream(track.id, { from:position }, $.proxy(function(sound) {
+			soundcloudStream(track.id, { defaultOptions: { from:position } }, $.proxy(function(sound) {
 
 				this.playingSound = sound;
 				this.playingSound.play();
