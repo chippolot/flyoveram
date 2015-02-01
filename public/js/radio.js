@@ -27,6 +27,7 @@
 			  type: "GET",
 			  dataType: "json"
 			}).done(function(result){
+				console.log("############ RANDOM TRACKS RESULT", result);
 				this.tracklist = result.trackUrls;
 				this.tracklist = _.shuffle(this.tracklist);
 				callback();
@@ -38,7 +39,7 @@
 			// If we're out of tracks, grab a new set
 			if (this.tracklist.length == 0) {
 				this.getRandomTracks($.proxy(function(){
-					console.log(this.tracklist);
+					console.log("############### TRACKLIST",this.tracklist);
 					this.playNextTrack();
 				}, this));
 				return;
