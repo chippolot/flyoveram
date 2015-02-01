@@ -8,17 +8,17 @@ function randomInRange(min, max) {
 
 var STATIC_FADE_DURATION = 0.75;
 
-var STATIC_MIN_VOLUME = 40;
+var STATIC_MIN_VOLUME = 30;
 var STATIC_MAX_VOLUME = 80;
 
 var MUSIC_MIN_VOLUME = 0;
 var MUSIC_MAX_VOLUME = 30;
 
 var MIN_MUSIC_PLAY_DURATION = 8;
-var MAX_MUSIC_PLAY_DURATION = 12;
+var MAX_MUSIC_PLAY_DURATION = 18;
 
-var MIN_MUSIC_PLAY_COOLDOWN = 6;
-var MAX_MUSIC_PLAY_COOLDOWN = 15;
+var MIN_MUSIC_PLAY_COOLDOWN = 5;
+var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 
 (function(){
@@ -27,7 +27,7 @@ var MAX_MUSIC_PLAY_COOLDOWN = 15;
 
 	Radio.prototype = {
 		initialize:function() {
-			this.trackIds = [];
+			this.tracklist = [];
 			this.playingSound = null;
 
 			this.staticFadePercent = 0;
@@ -46,8 +46,8 @@ var MAX_MUSIC_PLAY_COOLDOWN = 15;
 
 		getRandomTracks:function(callback) {
 			invokeAPIMethod("randomtracks", $.proxy(function(result){
-				this.trackIds = result.trackIds;
-				this.trackIds = _.shuffle(this.trackIds);
+				this.tracklist = result.tracks;
+				this.tracklist = _.shuffle(this.tracklist);
 				callback();
 			}, this));
 		},
@@ -55,7 +55,7 @@ var MAX_MUSIC_PLAY_COOLDOWN = 15;
 		playNextTrack:function() {
 
 			// If we're out of tracks, grab a new set
-			if (this.trackIds.length == 0) {
+			if (this.tracklist.length == 0) {
 				this.getRandomTracks($.proxy(function(){
 					this.playNextTrack();
 				}, this));
@@ -63,17 +63,17 @@ var MAX_MUSIC_PLAY_COOLDOWN = 15;
 			}
 
 			// Grab the first track on the list
-			var trackId = this.trackIds.shift();
+			var track = this.tracklist.shift();
 
 			// Stream the song
-			soundcloudStream(trackId, {}, $.proxy(function(sound) {
+			soundcloudStream(track.id, {}, $.proxy(function(sound) {
 
 				this.playingSound = sound;
 				this.playingSound.play();
 
-				/*var randomPercent = Math.random();
-				var position = randomPercent * 30000;
-				this.playingSound.setPosition(position);*/
+				var randomPercent = Math.random();
+				var position = randomPercent * track.duration;
+				this.playingSound.setPosition(position);
 
 				this.fadeInMusic();
 
