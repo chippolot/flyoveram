@@ -14,8 +14,8 @@ var STATIC_MAX_VOLUME = 80;
 var MUSIC_MIN_VOLUME = 0;
 var MUSIC_MAX_VOLUME = 30;
 
-var MIN_MUSIC_PLAY_DURATION = 8;
-var MAX_MUSIC_PLAY_DURATION = 15;
+var MIN_MUSIC_PLAY_DURATION = 9;
+var MAX_MUSIC_PLAY_DURATION = 16;
 
 var MIN_MUSIC_PLAY_COOLDOWN = 5;
 var MAX_MUSIC_PLAY_COOLDOWN = 9;
@@ -67,14 +67,13 @@ var MAX_MUSIC_PLAY_COOLDOWN = 9;
 
 			// Stream the song
 			console.log(":: starting to stream song", track.id)
-
-			//TODO: Get this working better
-			var randomPercent = Math.random();
-			var position = randomPercent * track.duration;
-			soundcloudStream(track.id, { defaultOptions: { from:position } }, $.proxy(function(sound) {
+			soundcloudStream(track.id, {}, $.proxy(function(sound) {
 
 				this.playingSound = sound;
-				this.playingSound.play();
+
+				var randomPercent = Math.random();
+				var position = randomPercent * track.duration;
+				this.playingSound.play({position:position});
 
 				this.fadeInMusic();
 
