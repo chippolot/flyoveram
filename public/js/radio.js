@@ -37,9 +37,10 @@
 
 			// If we're out of tracks, grab a new set
 			if (this.tracklist.length == 0) {
-				this.getRandomTracks(function(){
+				this.getRandomTracks($.proxy(function(){
+					console.log(this.tracklist);
 					this.playNextTrack();
-				});
+				}, this));
 				return;
 			}
 
