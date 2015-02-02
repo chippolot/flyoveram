@@ -6,7 +6,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.json({'url': _.sample(videosJSON)});
+	var video = _.sample(videosJSON);
+	res.json({'url': video.url, 'startAt': video.startAt });
 });
 
 module.exports = router;
